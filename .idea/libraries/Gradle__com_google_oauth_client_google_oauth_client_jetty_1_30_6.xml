@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.oauth-client:google-oauth-client-jetty:1.30.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-jetty/1.30.6/6581207a298133f0349632364bd26da64a85942c/google-oauth-client-jetty-1.30.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.oauth-client/google-oauth-client-jetty/1.30.6/75c97015ffc2da26eb88e87d0559fec59ee7b9de/google-oauth-client-jetty-1.30.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
