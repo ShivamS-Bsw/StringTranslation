@@ -18,7 +18,7 @@ public class GoogleSheetsService {
         sheetsService = SheetsServiceUtil.getSheetsService();
     }
 
-    public static Object readFromSpreadSheet(int project, int start,int end) throws IOException, GeneralSecurityException {
+    public static void readFromSpreadSheet(int project, int start,int end) throws IOException, GeneralSecurityException {
 
         String sheetName = MyConstants.getSheetNameFromProject(project);
 
@@ -49,7 +49,7 @@ public class GoogleSheetsService {
             if (lang == null)
                 continue;
 
-            try (XMLService xmlService = new XMLService(lang)) {
+            try (XMLService_1 xmlService = new XMLService_1(lang)) {
 
                 for (Object object : objectList) {
                     xmlService.appendFile(object.toString());
@@ -58,7 +58,6 @@ public class GoogleSheetsService {
                 e.printStackTrace();
             }
         }
-        return null;
     }
 
     private static String getLanguage(String str){

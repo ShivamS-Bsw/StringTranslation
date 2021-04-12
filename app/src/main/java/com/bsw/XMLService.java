@@ -59,6 +59,11 @@ public class XMLService implements AutoCloseable{
 
     public void appendFile(String str) {
         try {
+
+            for (String key : MyConstants.errorMaps.keySet()){
+                str = str.replace(key,MyConstants.errorMaps.get(key));
+            }
+
             Document element = null;
             element = documentBuilder.parse(new ByteArrayInputStream(str.getBytes(Charset.forName("UTF-8"))));
             Node importedNode = file.importNode(element.getFirstChild(), true);
