@@ -25,11 +25,11 @@ public class GoogleAuthorizeUtil {
         InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream(MyConstants.CREDENTIAL_PATH);
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JacksonFactory.getDefaultInstance(), new InputStreamReader(in));
 
-        List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS_READONLY);
+        List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.
                 Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), clientSecrets, scopes)
-                .setDataStoreFactory(new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH)))
+                .setDataStoreFactory(/*new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH))*/new MemoryDataStoreFactory())
                 .setAccessType("offline").build();
         Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 

@@ -17,17 +17,24 @@ public class MyConstants {
     public static final String SHEET_ID_1= "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo"; // BSW Translation
     public static final String SHEET_ID_2= "1ghguW5BTWqftDWMgDXBafobWoCZuAqRbxDwNx6j2gOw"; //New Translation
     public static final String SHEET_ID_3= "1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo"; //New Translation
+    public static final String VERSION_FILE_SHEET_ID= "1hz_0Lun6jF7ZCDRbqqFFKG9nzVCJVm-CruKb0VnNvPg"; //New Translation
     public static String stringFilePathDefault = "";
+    public static double currentVersion = 1.0;
 
     public static final String APNA_LUDO_SHEET = "Apna Ludo Final";
     public static final String LUDO_SUPERSTAR = "Ludo-master";
     public static final String CALLBREAK = "CB Final";
+    public static final String MASTER_SHEET = "";
 
-
+//    public static String getFilePath(String language){
+//        if (language == null || language.equals("default"))
+//            return "../LudoAndroidMaster/app/src/allLang/res/values/strings.xml";
+//        return String.format("../LudoAndroidMaster/app/src/allLang/res/values-%s/strings.xml",language);
+//    }
     public static String getFilePath(String language){
         if (language == null || language.equals("default"))
-            return String.format("../LudoAndroidMaster/app/src/allLang/res/values/strings.xml",language);
-        return String.format("../LudoAndroidMaster/app/src/allLang/res/values-%s/strings.xml",language);
+            return String.format("C:\\Users\\SHIVAM\\Desktop\\apnaLudo\\app\\src\\main\\res\\values\\strings.xml",language);
+        return String.format("C:\\Users\\SHIVAM\\Desktop\\apnaLudo\\app\\src\\main\\res\\values-%s\\strings.xml",language);
     }
 
     public static boolean setFilePath(String path){
@@ -86,7 +93,6 @@ public class MyConstants {
         put("% 8 $ s","%8$s");
         put("% 9 $ s","%9$s");
         put("stringname","string name");
-        put("”","\"");
         put("& amp;","&amp;");
         put("\\'","|!|QUOTE|!|");
         put("\\ '","|!|QUOTE|!|");

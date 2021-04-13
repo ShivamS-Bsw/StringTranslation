@@ -112,7 +112,7 @@ public class XMLService_1 implements AutoCloseable{
             writer.close();
             System.out.println("Closing File : " + language);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(language + e.getMessage());
         }
     }
 
