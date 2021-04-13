@@ -1,91 +1,47 @@
 package com.bsw;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MyConstants {
 
     public static final String CREDENTIAL_PATH = "/credentials.json";
-    public static final String SHEET_ID = "1wy2je6dWHetfet942i0ovG-xjrb8H3v2s9CSA-2QT0Q";
-    public static final String SHEET_ID_1= "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo";
-    public static final String stringFilePathDefault = "../ApnaLudoTesting/app/src/main/res/values/strings.xml";
+    public static final String SHEET_ID = "1b9-Aygfad2JsTxURYuFZH0_fsUIPztRxgcmDZWBxU6w";
+    public static final String SHEET_ID_1= "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo"; // BSW Translation
+    public static final String SHEET_ID_2= "1ghguW5BTWqftDWMgDXBafobWoCZuAqRbxDwNx6j2gOw"; //New Translation
+    public static final String SHEET_ID_3= "1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo"; //New Translation
+    public static String stringFilePathDefault = "";
 
     public static final String APNA_LUDO_SHEET = "Apna Ludo Final";
-    public static final String LUDO_SUPERSTAR = "Ludo-final";
+    public static final String LUDO_SUPERSTAR = "Ludo-master";
     public static final String CALLBREAK = "CB Final";
 
 
     public static String getFilePath(String language){
-        if (language == null)
-            return stringFilePathDefault;
-        return String.format("../ApnaLudoTesting/app/src/main/res/values-%s/strings.xml",language);
+        if (language == null || language.equals("default"))
+            return String.format("../LudoAndroidMaster/app/src/allLang/res/values/strings.xml",language);
+        return String.format("../LudoAndroidMaster/app/src/allLang/res/values-%s/strings.xml",language);
     }
 
-    public static final Map<String, String> colLangMapApnaLudo = new HashMap<String, String>() {{
-            put("A", "en");
-            put("B", "hi");
-            put("C", "ur");
-            put("D", "bn");
-            put("E", "ne");
-            put("F", "ar");
-            put("G", "es");
-            put("H", "pt");
-            put("I", "in");
-            put("J", "fr");
-    }};
+    public static boolean setFilePath(String path){
 
-    public static final Map<String, String> colLangMapLudoSuperstar = new HashMap<String, String>() {{
-        put("A", "ar");
-        put("B", "bn");
-        put("C", "de");
-        put("D", "fr");
-        put("E", "gu");
-        put("F", "hi");
-        put("G", "in");
-        put("H", "ja");
-        put("I", "kn");
-        put("J", "ko");
-        put("K", "ml");
-        put("L", "mr");
-        put("M", "nl");
-        put("N", "pt");
-        put("O", "ru");
-        put("P", "ta");
-        put("Q", "te");
-        put("R", "ur");
-        put("S", "zh");
-        put("T", "tr");
-        put("U", "hi");
-        put("W", "es");
-    }};
-    public static final Map<String, String> colLangMapCallBreak = new HashMap<String, String>() {{
-        put("A", "hi");
-        put("B", "bn");
-        put("C", "de");
-        put("D", "en");
-        put("E", "es");
-        put("F", "fr");
-        put("G", "gu");
-        put("H", "in");
-        put("I", "it");
-        put("J", "ja");
-        put("K", "ko");
-        put("L", "ml");
-        put("M", "mr");
-        put("N", "pt");
-        put("O", "ru");
-        put("P", "ta");
-        put("Q", "te");
-        put("R", "zh");
-    }};
+        if (path.trim().isEmpty())
+            return false;
 
-    public static void addLanguage(String col, String lang){
-        if (col == null || lang == null )
-            return;
+        if (path.trim().charAt(path.length()) == File.separatorChar){
+            path = path.substring(0, path.length() - 1);
+        }
 
-        colLangMapLudoSuperstar.put(col,lang);
+        stringFilePathDefault = path.trim() + File.separator +  "values-%s" + File.separator + "strings.xml";
+        return true;
     }
-
     public static String getSheetNameFromProject(int project){
         switch (project){
             case 1:
@@ -110,7 +66,7 @@ public class MyConstants {
         put("% s"," %s");
         put("! [ CDATA [","![CDATA[");
         put("] ] >","]]>");
-        put("\\ '"," \\'");
+
         put("% 1 $ d","%1$d");
         put("% 2 $ d","%2$d");
         put("% 3 $ d","%3$d");
@@ -129,5 +85,16 @@ public class MyConstants {
         put("% 7 $ s","%7$s");
         put("% 8 $ s","%8$s");
         put("% 9 $ s","%9$s");
+        put("stringname","string name");
+        put("”","\"");
+        put("& amp;","&amp;");
+        put("\\'","|!|QUOTE|!|");
+        put("\\ '","|!|QUOTE|!|");
+        put("'","|!|QUOTE|!|");
+        put("|!|QUOTE|!|","\\'");
+        put("<\\","</");
+        put("& A","&amp;");
+        put("& amp ;","&amp;");
+        put("& amp","&amp;");
     }};
 }

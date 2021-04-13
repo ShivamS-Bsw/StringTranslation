@@ -12,13 +12,13 @@ import java.util.List;
 
 public class GoogleSheetsService {
     private static Sheets sheetsService;
-    private static String SPREADSHEET_ID = MyConstants.SHEET_ID_1;
+    private static String SPREADSHEET_ID = MyConstants.SHEET_ID_3;
 
     public static void setup() throws GeneralSecurityException, IOException {
         sheetsService = SheetsServiceUtil.getSheetsService();
     }
 
-    public static void readFromSpreadSheet(int project, int start,int end) throws IOException, GeneralSecurityException {
+    public static void readFromSpreadSheet(int project) throws IOException, GeneralSecurityException {
 
         String sheetName = MyConstants.getSheetNameFromProject(project);
 
@@ -27,11 +27,7 @@ public class GoogleSheetsService {
         }
 
         List<String> ranges = new ArrayList<>();
-
-        for (String key : MyConstants.colLangMapApnaLudo.keySet()){
-            String str = sheetName+"!"+ key + start + ":" + key + end;
-            ranges.add(str);
-        }
+        ranges.add(sheetName);
 
         String valueRenderingOptions = "FORMATTED_VALUE";
 
@@ -44,28 +40,34 @@ public class GoogleSheetsService {
 
         List<ValueRange> valueRanges = readResult.getValueRanges();
         for (ValueRange valueRange : valueRanges){
-            List<Object> objectList = valueRange.getValues().get(0);
-            String lang = getLanguage(valueRange.getRange());
-            if (lang == null)
-                continue;
+            List<List<Object>> colList = valueRange.getValues();
 
-            try (XMLService_1 xmlService = new XMLService_1(lang)) {
+            for (List<Object> objects : colList){
 
-                for (Object object : objectList) {
-                    xmlService.appendFile(object.toString());
+                if (objects == null || objects.size() == 0)
+                    continue;
+
+                String lang = objects.get(0).toString(); // Lang Coloumn
+                try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
+                    for (int i = 1; i < objects.size(); i++) {
+                        String data = objects.get(i).toString();
+
+                        if (checkForValidData(data)){
+                            xmlService_1.appendFile(data.trim());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
 
-    private static String getLanguage(String str){
+    private static boolean checkForValidData(String data){
 
-        if (str == null)
-            return null;
+        if (data.trim().isEmpty() && !data.contains("<"))
+            return false;
+        return true;
 
-        String key = Character.toString(str.charAt(str.lastIndexOf("!")+1));
-        return MyConstants.colLangMapApnaLudo.get(key);
     }
 }

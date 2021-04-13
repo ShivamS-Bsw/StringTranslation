@@ -27,21 +27,53 @@ public class App {
 
     public static void main(String[] args) throws IOException, GeneralSecurityException {
 
-        Scanner sc= new Scanner(System.in);
+        /*
+        * args[0] = Project Number
+        * args[1] = path
+        *
+        *
+        *
+        * */
 
-        System.out.println("Select Project:");
-        System.out.println("1. Ludo Superstar");
-        System.out.println("2. Apna Ludo");
-        System.out.println("3. Callbreak");
+//        if (args != null && args.length == 3){
+//
+//            int project = Integer.parseInt(args[0].trim());
+//            String path = args[1].trim();
+//            String rows = args[2].trim();
+//
+//            if (!MyConstants.setFilePath(args[1].trim())){
+//                System.out.println("Incorrect Path....Exiting");
+//                System.exit(0);
+//            }
+//
+//            if (rows != null && !rows.isEmpty()){
+//
+//            }
+//
+//        }else{
+//            System.out.println("Args[0]: project (integer)");
+//            System.out.println("Args[1]: path (string)");
+//            System.out.println("Args[2]: start:end rows (10:12)");
+//            System.exit(0);
+//        }
+//
+//        Scanner sc= new Scanner(System.in);
+//
+//        System.out.println("Select Project:");
+//        System.out.println("1. Ludo Superstar");
+//        System.out.println("2. Apna Ludo");
+//        System.out.println("3. Callbreak");
+//
+//        int project = sc.nextInt();
+//
+//        System.out.println("Start Row(Inclusive) <space> End Row(Inclusive)");
+//        int start = Integer.parseInt(sc.next());
+//        int end = Integer.parseInt(sc.next());
+//
+//        if (start > 0 && end >= start){
+//            GoogleSheetsService.readFromSpreadSheet(project,start,end);
+//        }
 
-        int project = sc.nextInt();
-
-        System.out.println("Start Row(Inclusive) <space> End Row(Inclusive)");
-        int start = Integer.parseInt(sc.next());
-        int end = Integer.parseInt(sc.next());
-
-        if (start > 0 && end >= start){
-            GoogleSheetsService.readFromSpreadSheet(project,start,end);
-        }
+        GoogleSheetsService.readFromSpreadSheet(1);
     }
 }
