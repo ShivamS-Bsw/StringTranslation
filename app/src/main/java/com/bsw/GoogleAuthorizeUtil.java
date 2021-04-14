@@ -29,7 +29,7 @@ public class GoogleAuthorizeUtil {
 
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.
                 Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), clientSecrets, scopes)
-                .setDataStoreFactory(/*new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH))*/new MemoryDataStoreFactory())
+                .setDataStoreFactory(new FileDataStoreFactory(new File(TOKENS_DIRECTORY_PATH)))
                 .setAccessType("offline").build();
         Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -13,28 +14,17 @@ import java.util.regex.Pattern;
 public class MyConstants {
 
     public static final String CREDENTIAL_PATH = "/credentials.json";
-    public static final String SHEET_ID = "1b9-Aygfad2JsTxURYuFZH0_fsUIPztRxgcmDZWBxU6w";
-    public static final String SHEET_ID_1= "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo"; // BSW Translation
-    public static final String SHEET_ID_2= "1ghguW5BTWqftDWMgDXBafobWoCZuAqRbxDwNx6j2gOw"; //New Translation
-    public static final String SHEET_ID_3= "1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo"; //New Translation
-    public static final String VERSION_FILE_SHEET_ID= "1hz_0Lun6jF7ZCDRbqqFFKG9nzVCJVm-CruKb0VnNvPg"; //New Translation
+    public static String SHEET_ID = "";
+    public static final String VERSION_SHEET_NAME= "Version"; //Version Sheet Name
     public static String stringFilePathDefault = "";
-    public static double currentVersion = 1.0;
+    public static String stringFilePathLang = "";
+    public static int currentVersion = 0;
+    public static String MASTER_SHEET = "";
 
-    public static final String APNA_LUDO_SHEET = "Apna Ludo Final";
-    public static final String LUDO_SUPERSTAR = "Ludo-master";
-    public static final String CALLBREAK = "CB Final";
-    public static final String MASTER_SHEET = "";
-
-//    public static String getFilePath(String language){
-//        if (language == null || language.equals("default"))
-//            return "../LudoAndroidMaster/app/src/allLang/res/values/strings.xml";
-//        return String.format("../LudoAndroidMaster/app/src/allLang/res/values-%s/strings.xml",language);
-//    }
     public static String getFilePath(String language){
         if (language == null || language.equals("default"))
-            return String.format("C:\\Users\\SHIVAM\\Desktop\\apnaLudo\\app\\src\\main\\res\\values\\strings.xml",language);
-        return String.format("C:\\Users\\SHIVAM\\Desktop\\apnaLudo\\app\\src\\main\\res\\values-%s\\strings.xml",language);
+            return stringFilePathDefault;
+        return String.format(stringFilePathLang,language);
     }
 
     public static boolean setFilePath(String path){
@@ -42,22 +32,14 @@ public class MyConstants {
         if (path.trim().isEmpty())
             return false;
 
-        if (path.trim().charAt(path.length()) == File.separatorChar){
+        if (path.trim().charAt(path.length()-1) == File.separatorChar){
             path = path.substring(0, path.length() - 1);
         }
 
-        stringFilePathDefault = path.trim() + File.separator +  "values-%s" + File.separator + "strings.xml";
+        stringFilePathDefault = path.trim() + File.separator +  "values" + File.separator + "strings.xml";
+        stringFilePathLang = path.trim() + File.separator +  "values-%s" + File.separator + "strings.xml";
         return true;
     }
-    public static String getSheetNameFromProject(int project){
-        switch (project){
-            case 1:
-                return LUDO_SUPERSTAR;
-            case 3:
-                return CALLBREAK;
-            default:return APNA_LUDO_SHEET; //default 2
-        }
-    };
 
     public static final Map<String, String> errorMaps = new HashMap<String, String>() {{
         put("\\N","\\n");
@@ -103,4 +85,39 @@ public class MyConstants {
         put("& amp ;","&amp;");
         put("& amp","&amp;");
     }};
+
+    public static Integer getRandomSheetId(){
+        return new Random().nextInt(9999);
+    }
+    public static void incrementVersion(){
+        MyConstants.currentVersion++;
+    }
+//    private void setMasterSheetName(int project){
+//        MASTER_SHEET = projectSheetMapName.get(project);
+//    }
+
+    public static final SortedMap<String,String> projectName = new TreeMap<String,String>(){{
+        put("Ludo","Ludo-master");
+        put("Callbreak","CB final");
+        put("Apna Ludo","Apna Ludo Final");
+
+    }};
+
+    public static final SortedMap<String,String> projectSheetIdMapName = new TreeMap<String,String>(){{
+        put("Ludo-master","1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo");
+        put("CB final", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
+        put("Apna Ludo Final", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
+
+    }};
+
+    public static String[] getProjectName(){
+        String[] str = new String[projectName.size()];
+        int i = 0;
+        for (String s : projectName.keySet()){
+            str[i] = s;
+            i++;
+        }
+
+        return str;
+    }
 }

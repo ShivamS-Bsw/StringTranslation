@@ -3,6 +3,7 @@
  */
 package com.bsw;
 
+import com.bsw.ui.MyFrame;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -14,6 +15,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
 
+import java.awt.BorderLayout;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,57 +25,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 public class App {
 
-    public static void main(String[] args) throws IOException, GeneralSecurityException {
+    public static MyFrame myFrame;
 
-        /*
-        * args[0] = Project Number
-        * args[1] = path
-        *
-        *
-        *
-        * */
+    public static void main(String[] args){
+        myFrame = new MyFrame();
+//        GoogleSheetsService.setup();
+    }
 
-//        if (args != null && args.length == 3){
-//
-//            int project = Integer.parseInt(args[0].trim());
-//            String path = args[1].trim();
-//            String rows = args[2].trim();
-//
-//            if (!MyConstants.setFilePath(args[1].trim())){
-//                System.out.println("Incorrect Path....Exiting");
-//                System.exit(0);
-//            }
-//
-//            if (rows != null && !rows.isEmpty()){
-//
-//            }
-//
-//        }else{
-//            System.out.println("Args[0]: project (integer)");
-//            System.out.println("Args[1]: path (string)");
-//            System.out.println("Args[2]: start:end rows (10:12)");
-//            System.exit(0);
-//        }
-//
-//        Scanner sc= new Scanner(System.in);
-//
-//        System.out.println("Select Project:");
-//        System.out.println("1. Ludo Superstar");
-//        System.out.println("2. Apna Ludo");
-//        System.out.println("3. Callbreak");
-//
-//        int project = sc.nextInt();
-//
-//        System.out.println("Start Row(Inclusive) <space> End Row(Inclusive)");
-//        int start = Integer.parseInt(sc.next());
-//        int end = Integer.parseInt(sc.next());
-//
-//        if (start > 0 && end >= start){
-//            GoogleSheetsService.readFromSpreadSheet(project,start,end);
-//        }
-
-        GoogleSheetsService.readFromSpreadSheet(1);
+    public static void writeLogs(String str){
+        myFrame.writeOutput(str);
     }
 }
