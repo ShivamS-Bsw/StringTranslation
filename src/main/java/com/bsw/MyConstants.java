@@ -55,7 +55,7 @@ public class MyConstants {
         put("% s"," %s");
         put("! [ CDATA [","![CDATA[");
         put("] ] >","]]>");
-
+        put("٪"," %");
         put("% 1 $ d","%1$d");
         put("% 2 $ d","%2$d");
         put("% 3 $ d","%3$d");
