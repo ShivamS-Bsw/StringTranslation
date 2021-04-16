@@ -104,9 +104,9 @@ public class MyConstants {
     }};
 
     public static final SortedMap<String,String> projectSheetIdMapName = new TreeMap<String,String>(){{
-        put("Ludo-master","1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo");
-        put("CB final", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
-        put("Apna Ludo Final", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
+        put("Ludo","1fZ6OW329nKV4mF0Ri_x37XSFYCEDqZSpGgu8xiosfQo");
+        put("Callbreak", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
+        put("Apna Ludo", "1_Ca-rNQespq-FKc2cdXJ9CL36IOLw72pYq5N855MUHo");
 
     }};
 

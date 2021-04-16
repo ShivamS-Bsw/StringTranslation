@@ -17,12 +17,13 @@ public class MyFrame extends JFrame implements ActionListener {
     private Container c;
     private JLabel sheetIdLabel;
 //    private JTextField sheetId;
-//    private JLabel sheetNameLable;
-//    private JTextField sheetName;
+    private JLabel sheetNameLable;
+    private JTextField sheetName;
     private JLabel pathLable;
     private JTextField path;
     private JButton submit;
     private JButton select;
+    private JButton clearOutput;
 //    private JButton save;
     private JFileChooser fileChooser ;
     private JLabel errroLable;
@@ -53,17 +54,17 @@ public class MyFrame extends JFrame implements ActionListener {
 //        sheetId.setLocation(120, 50);
 //        c.add(sheetId);
 //
-//        sheetNameLable = new JLabel("Sheet Name");
-//        sheetNameLable.setFont(new Font("Arial", Font.PLAIN, 15));
-//        sheetNameLable.setSize(100, 15);
-//        sheetNameLable.setLocation(20, 90);
-//        c.add(sheetNameLable);
-//
-//        sheetName = new JTextField();
-//        sheetName.setFont(new Font("Arial", Font.PLAIN, 15));
-//        sheetName.setSize(150, 20);
-//        sheetName.setLocation(120, 90);
-//        c.add(sheetName);
+        sheetNameLable = new JLabel("Sheet Name");
+        sheetNameLable.setFont(new Font("Arial", Font.PLAIN, 15));
+        sheetNameLable.setSize(100, 15);
+        sheetNameLable.setLocation(20, 90);
+        c.add(sheetNameLable);
+
+        sheetName = new JTextField();
+        sheetName.setFont(new Font("Arial", Font.PLAIN, 15));
+        sheetName.setSize(150, 20);
+        sheetName.setLocation(120, 90);
+        c.add(sheetName);
 
         project = new JComboBox(MyConstants.getProjectName());
         project.setFont(new Font("Arial", Font.PLAIN, 15));
@@ -125,6 +126,13 @@ public class MyFrame extends JFrame implements ActionListener {
         output.setEditable(false);
         c.add(output);
 
+        clearOutput = new JButton("Clear");
+        clearOutput.setFont(new Font("Arial", Font.PLAIN, 15));
+        clearOutput.setSize(70, 20);
+        clearOutput.setLocation(325, 245);
+        clearOutput.addActionListener(this);
+        c.add(clearOutput);
+
 
         JPanel groupBoxEncryption = new JPanel();
 
@@ -162,12 +170,10 @@ public class MyFrame extends JFrame implements ActionListener {
 //            if (sheetId.getText().trim().isEmpty()){
 //                errroLable.setText("* Sheet Id cannot be empty");
 //                return;
-//            }else if (sheetName.getText().trim().isEmpty()){
-//                errroLable.setText("* Sheet Name cannot be empty");
-//                return;
-//            }else
-
-            if (project.getSelectedIndex() == -1 || project.getSelectedItem() == null || project.getSelectedItem().toString().trim().isEmpty()){
+            if (sheetName.getText().trim().isEmpty()){
+                errroLable.setText("* Sheet Name cannot be empty");
+                return;
+            }else if (project.getSelectedIndex() == -1 || project.getSelectedItem() == null || project.getSelectedItem().toString().trim().isEmpty()){
                 errroLable.setText("* Select project");
                 return;
             } else if (path.getText().trim().isEmpty()){
@@ -181,12 +187,17 @@ public class MyFrame extends JFrame implements ActionListener {
                 errroLable.setText("");
             }
 
-            MyConstants.MASTER_SHEET = MyConstants.projectName.get((String)project.getSelectedItem());
-            MyConstants.SHEET_ID = MyConstants.projectSheetIdMapName.get(MyConstants.MASTER_SHEET);
+            MyConstants.MASTER_SHEET = sheetName.getText().trim();/*MyConstants.projectName.get((String)project.getSelectedItem())*/;
+            MyConstants.SHEET_ID = MyConstants.projectSheetIdMapName.get(project.getSelectedItem().toString());
             MyConstants.setFilePath(path.getText().trim());
             MyConstants.currentVersion = 0;
             clearData();
             GoogleSheetsService.setup();
+        }
+
+        if (e.getSource() == clearOutput){
+            output.setText("");
+            output.invalidate();
         }
     }
     private void clearData(){

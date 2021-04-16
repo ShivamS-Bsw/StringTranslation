@@ -148,10 +148,13 @@ public class GoogleSheetsService {
 
     }
     private static int containsVersionSheet = -1; // -1 Not Present 0 Created 1 Already Present
+    private static boolean containsMasterSheet = false; // -1 Not Present 0 Created 1 Already Present
     private static boolean isVersionSheetCreated = false;
     public static void getSpreadSheetPropertiesData() {
 
         try {
+
+            containsMasterSheet = false;
 
             if (sheetsService == null) {
                 setup();
@@ -161,7 +164,7 @@ public class GoogleSheetsService {
             Spreadsheet response = request.execute();
 
             if (response == null) {
-                App.writeLogs("Failed to fetch properties");
+                throw new Exception("Failed to fetch properties from the spreadsheetId");
             }
 
             List<Sheet> sheetsList = response.getSheets();
@@ -173,9 +176,14 @@ public class GoogleSheetsService {
                 }
 
                 if (sheet.getProperties().getTitle().equals(MyConstants.MASTER_SHEET)) {
-                     masterSheetProperties = sheet.getProperties();
-                     break;
+                    containsMasterSheet = true;
+                    masterSheetProperties = sheet.getProperties();
+                    break;
                 }
+            }
+
+            if (!containsMasterSheet){
+                throw new Exception("Sheet not present. Please check the sheet name");
             }
 
             if (containsVersionSheet == -1){
