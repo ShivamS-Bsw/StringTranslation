@@ -191,11 +191,11 @@ public class MyFrame extends JFrame implements ActionListener {
     }
     private void clearData(){
         output.setText("");
-        output.invalidate();
 //        sheetId.setText("");
 //        sheetName.setText("");
         path.setText("");
         term.setSelected(false);
+        invalidate();
     }
 }
 
