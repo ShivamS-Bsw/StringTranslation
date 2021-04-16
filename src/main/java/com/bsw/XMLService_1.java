@@ -112,7 +112,7 @@ public class XMLService_1 implements AutoCloseable{
             writer.close();
             App.writeLogs("Write Success : " + language);
         } catch (IOException e) {
-            App.writeLogs(e.getMessage());
+            App.writeLogs("###FileNotFound: " + filePath);
         }
     }
 
