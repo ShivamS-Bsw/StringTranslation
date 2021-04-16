@@ -48,7 +48,9 @@ public class MyConstants {
         put("%D"," %d");
         put("% D"," %d");
         put("٪ D"," %d");
+        put("٪ d"," %d");
         put("٪ S"," %s");
+        put("٪ s"," %s");
         put("% d"," %d");
         put("%S"," %s");
         put("% S"," %s");
