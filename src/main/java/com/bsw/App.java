@@ -39,12 +39,50 @@ public class App {
 
     public static MyFrame myFrame;
 
-    public static void main(String[] args){
-        myFrame = new MyFrame();
+    public static boolean main(String[] args){
+//        myFrame = new MyFrame();
 //        GoogleSheetsService.setup();
     }
 
     public static void writeLogs(String str){
         myFrame.writeOutput(str);
+    }
+
+    private void validateStrings(String str){
+        if (validCondition(str)){
+            System.out.println("Valid String" + str);
+        }else{
+            System.out.println("Invalid String" + str);
+        }
+    }
+    private boolean validCondition(String str){
+        if (str.startsWith("<string name=") && str.endsWith("</string>")) {
+            if (str.contains("%")) {
+                if (!(str.matches("(%[sdf])") || str.matches("(%[1-9]+[$]+[sdf])"))){
+                    return false;
+                }
+            }
+
+            if (str.contains("&")){
+                if (!(str.matches("(&amp;)"))){
+                    return false;
+                }
+            }
+
+            if (str.contains("\\")){
+                if (!str.matches("(\\\\[n'\"])")){
+                    return false;
+                }
+            }
+
+            if (str.contains("CDATA")){
+                if (!str.matches("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)")){
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
