@@ -21,12 +21,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 public class GoogleSheetsService {
     private static Sheets sheetsService;
     private static String SPREADSHEET_ID = MyConstants.SHEET_ID;
     private static SheetProperties masterSheetProperties;
     private static long max = Long.MAX_VALUE;
+    private StringBuilder resultStringBuilder;
     public static void setup(){
         try {
             sheetsService = SheetsServiceUtil.getSheetsService();
@@ -58,27 +60,31 @@ public class GoogleSheetsService {
             List<ValueRange> valueRanges = readResult.getValueRanges();
             for (ValueRange valueRange : valueRanges) {
                 List<List<Object>> colList = valueRange.getValues();
+                new StringValidator(colList).checkForEachStrings();
 
-                for (List<Object> objects : colList) {
-
-                    if (objects == null || objects.size() == 0)
-                        continue;
-
-                    String lang = objects.get(0).toString(); // Lang Coloumn
-                    max = max - objects.size();
-                    try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
-                        for (int i = 1; i < objects.size(); i++) {
-                            String data = objects.get(i).toString();
-
-                            if (checkForValidData(data)) {
-                                xmlService_1.appendFile(data.trim());
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                checkIfNewDataHasAdded();
+//                for (List<Object> objects : colList) {
+//
+//                    if (objects == null || objects.size() == 0)
+//                        continue;
+//
+//                    String lang = objects.get(0).toString(); // Lang Coloumn
+//                    max = max - objects.size();
+////                    try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
+////                        for (int i = 1; i < objects.size(); i++) {
+////                            String data = objects.get(i).toString();
+////
+//////                            if (checkForValidData(data)) {
+//////                                xmlService_1.appendFile(data.trim());
+//////                            }
+////
+////                        }
+////                    } catch (Exception e) {
+////                        e.printStackTrace();
+////                    }
+//
+//
+//                }
+//                checkIfNewDataHasAdded();
             }
         } catch (Exception e) {
             App.writeLogs(e.getMessage());
@@ -111,30 +117,126 @@ public class GoogleSheetsService {
         for (ValueRange valueRange : valueRanges){
             List<List<Object>> colList = valueRange.getValues();
 
-            for (List<Object> objects : colList){
 
-                if (objects == null || objects.size() == 0)
-                    continue;
-                String lang = objects.get(0).toString(); // Lang Coloumn
-                max = max - objects.size();
-                if (lang.equals(l)){
-                    try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
-                        for (int i = 1; i < objects.size(); i++) {
-                            String data = objects.get(i).toString();
+//            for (List<Object> objects : colList){
+//
+//                if (objects == null || objects.size() == 0)
+//                    continue;
+//                String lang = objects.get(0).toString(); // Lang Coloumn
+//                max = max - objects.size();
+//                if (lang.equals(l)){
+//                    try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
+//                        for (int i = 1; i < objects.size(); i++) {
+//                            String data = objects.get(i).toString();
+//
+//                            if (checkForValidData(data)){
+//                                xmlService_1.appendFile(data.trim());
+//                            }
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+            //Something has written to that file
+//            checkIfNewDataHasAdded();
+        }
+    }
 
-                            if (checkForValidData(data)){
-                                xmlService_1.appendFile(data.trim());
+    private static void validateStrings(String str) {
+        if (!validCondition(str)) {
+
+        }
+    }
+
+    private static boolean validCondition(String str) {
+        if (str.startsWith("<string name=") && str.endsWith("</string>")) {
+
+            if (str.contains("٪"))
+                return false;
+
+            //Second Validation
+            if (str.contains("%")) {
+                int len = str.length();
+                int i = str.indexOf("%");
+                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
+
+                    if (str.charAt(i) != '%') {
+                        i++;
+                        continue;
+                    }
+                    if (i + 1 < len && !(str.charAt(i + 1) == 's' || str.charAt(i + 1) == 'd' || str.charAt(i + 1) == 'f')) {
+                        if (len - i + 1 >= 3 && !(str.charAt(i + 1) >= 33 && str.charAt(i + 1) <= 41)) {
+                            if (str.charAt(i + 2) == '$') {
+                                if (!(str.charAt(i + 3) == 's' || str.charAt(i + 3) == 'd' || str.charAt(i + 3) == 'f')) {
+                                    return false;
+                                } else {
+                                    i = i + 4;
+                                }
+                            } else {
+                                return false;
                             }
+                        } else {
+                            return false;
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else {
+                        i = i + 2;
+                    }
+                }
+                return true;
+            }
+
+            //Third Validation
+            if (str.contains("&")) {
+                int len = str.length();
+                int i = str.indexOf("&");
+
+                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
+                    if (str.charAt(i) != '%') {
+                        i++;
+                        continue;
+                    }
+
+                    if (len - i + 1 >= 4 && !(str.charAt(i + 1) == 'a' && str.charAt(i + 2) == 'm' && str.charAt(i + 3) == 'p' && str.charAt(i + 3) == ';')) {
+                        return false;
+                    } else {
+                        i = i + 5;
                     }
                 }
             }
-            //Something has written to that file
-            checkIfNewDataHasAdded();
+
+            //Fourth Validation
+            if (str.contains("\\")) {
+
+                int len = str.length();
+                int i = str.indexOf("\\");
+
+                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
+
+                    if (str.charAt(i) != '\\') {
+                        i++;
+                        continue;
+                    }
+                    if (i + 1 < len && !(str.charAt(i + 1) == 'n' || str.charAt(i + 1) == '\'' || str.charAt(i + 1) == '"')) {
+                        return false;
+                    } else {
+                        i = i + 2;
+                    }
+                }
+            }
+
+            //Fifth Validations
+            if (str.contains("CDATA")){
+                Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
+                if (!p.matcher(str).find()){
+                    return false;
+                }
+            }
+            return true;
         }
+        return false;
     }
+
 
     private static void checkIfNewDataHasAdded() throws GeneralSecurityException, IOException {
         if (max != Long.MAX_VALUE){

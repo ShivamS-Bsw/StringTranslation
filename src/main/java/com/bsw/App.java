@@ -41,105 +41,10 @@ public class App {
     public static MyFrame myFrame;
 
     public static void main(String[] args) {
-//        myFrame = new MyFrame();
-//        GoogleSheetsService.setup();
-        validateStrings("<string name=\"shivam\"> Unlocks a9t %s %d %2$s</string>");
+        myFrame = new MyFrame();
     }
 
     public static void writeLogs(String str) {
         myFrame.writeOutput(str);
-    }
-
-    private static void validateStrings(String str) {
-        if (validCondition(str)) {
-            System.out.println("Valid String" + str);
-        } else {
-            System.out.println("Invalid String" + str);
-        }
-    }
-
-    private static boolean validCondition(String str) {
-        if (str.startsWith("<string name=") && str.endsWith("</string>")) {
-
-            //Second Validation
-            if (str.contains("%")) {
-                int len = str.length();
-                int i = str.indexOf("%");
-                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
-
-                    if (str.charAt(i) != '%') {
-                        i++;
-                        continue;
-                    }
-                    if (i + 1 < len && !(str.charAt(i + 1) == 's' || str.charAt(i + 1) == 'd' || str.charAt(i + 1) == 'f')) {
-                        if (len - i + 1 >= 3 && !(str.charAt(i + 1) >= 33 && str.charAt(i + 1) <= 41)) {
-                            if (str.charAt(i + 2) == '$') {
-                                if (!(str.charAt(i + 3) == 's' || str.charAt(i + 3) == 'd' || str.charAt(i + 3) == 'f')) {
-                                    return false;
-                                } else {
-                                    i = i + 4;
-                                }
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        i = i + 2;
-                    }
-                }
-                return true;
-            }
-
-            //Third Validation
-            if (str.contains("&")) {
-                int len = str.length();
-                int i = str.indexOf("&");
-
-                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
-                    if (str.charAt(i) != '%') {
-                        i++;
-                        continue;
-                    }
-
-                    if (len - i + 1 >= 4 && !(str.charAt(i + 1) == 'a' && str.charAt(i + 2) == 'm' && str.charAt(i + 3) == 'p' && str.charAt(i + 3) == ';')) {
-                        return false;
-                    } else {
-                        i = i + 5;
-                    }
-                }
-            }
-
-            //Fourth Validation
-            if (str.contains("\\")) {
-
-                int len = str.length();
-                int i = str.indexOf("\\");
-
-                while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
-
-                    if (str.charAt(i) != '\\') {
-                        i++;
-                        continue;
-                    }
-                    if (i + 1 < len && !(str.charAt(i + 1) == 'n' || str.charAt(i + 1) == '\'' || str.charAt(i + 1) == '"')) {
-                        return false;
-                    } else {
-                        i = i + 2;
-                    }
-                }
-            }
-
-            //Fifth Validations
-            if (str.contains("CDATA")){
-                Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
-                if (!p.matcher(str).find()){
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 }
