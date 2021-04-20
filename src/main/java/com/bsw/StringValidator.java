@@ -58,9 +58,15 @@ public class StringValidator {
 
     }
 
+    private static final Pattern p = Pattern.compile("<!--[\\s\\S].*?-->");
 
     public static boolean validCondition(String str) {
-        if ((str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
+
+        if (p.matcher(str).find()){
+            str = p.matcher(str).replaceAll("").trim();
+        }
+
+        if (!str.isEmpty() && (str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
 
             if (str.contains("٪"))
                 return false;
