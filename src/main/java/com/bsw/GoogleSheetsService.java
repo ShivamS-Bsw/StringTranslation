@@ -29,7 +29,8 @@ public class GoogleSheetsService {
     private static SheetProperties masterSheetProperties;
     private static long max = Long.MAX_VALUE;
     private StringBuilder resultStringBuilder;
-    public static void setup(){
+
+    public static void setup() {
         try {
             sheetsService = SheetsServiceUtil.getSheetsService();
             getSpreadSheetPropertiesData();
@@ -38,7 +39,7 @@ public class GoogleSheetsService {
         }
     }
 
-    public static void readFromSpreadSheet(){
+    public static void readFromSpreadSheet() {
 
         try {
             if (sheetsService == null) {
@@ -60,31 +61,31 @@ public class GoogleSheetsService {
             List<ValueRange> valueRanges = readResult.getValueRanges();
             for (ValueRange valueRange : valueRanges) {
                 List<List<Object>> colList = valueRange.getValues();
-                new StringValidator(colList).checkForEachStrings();
+                boolean invalidStringsFound = new StringValidator(colList).checkForEachStrings();
 
-//                for (List<Object> objects : colList) {
+                if (!invalidStringsFound) {
+                    for (List<Object> objects : colList) {
 //
-//                    if (objects == null || objects.size() == 0)
-//                        continue;
-//
-//                    String lang = objects.get(0).toString(); // Lang Coloumn
-//                    max = max - objects.size();
-////                    try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
-////                        for (int i = 1; i < objects.size(); i++) {
-////                            String data = objects.get(i).toString();
-////
-//////                            if (checkForValidData(data)) {
-//////                                xmlService_1.appendFile(data.trim());
-//////                            }
-////
-////                        }
-////                    } catch (Exception e) {
-////                        e.printStackTrace();
-////                    }
-//
-//
-//                }
-//                checkIfNewDataHasAdded();
+                        if (objects == null || objects.size() == 0)
+                            continue;
+
+                        String lang = objects.get(0).toString(); // Lang Coloumn
+                        max = max - objects.size();
+                        try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
+                            for (int i = 1; i < objects.size(); i++) {
+                                String data = objects.get(i).toString();
+
+                                if (checkForValidData(data)) {
+                                    xmlService_1.appendFile(data.trim());
+                                }
+
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    checkIfNewDataHasAdded();
+                }
             }
         } catch (Exception e) {
             App.writeLogs(e.getMessage());
@@ -94,7 +95,7 @@ public class GoogleSheetsService {
 
     public static void readFromSpreadSheetForSingleLang(int project, String l) throws IOException, GeneralSecurityException {
 
-        if (sheetsService == null){
+        if (sheetsService == null) {
             setup();
         }
 
@@ -114,7 +115,7 @@ public class GoogleSheetsService {
                 .execute();
 
         List<ValueRange> valueRanges = readResult.getValueRanges();
-        for (ValueRange valueRange : valueRanges){
+        for (ValueRange valueRange : valueRanges) {
             List<List<Object>> colList = valueRange.getValues();
 
 
@@ -140,12 +141,6 @@ public class GoogleSheetsService {
 //            }
             //Something has written to that file
 //            checkIfNewDataHasAdded();
-        }
-    }
-
-    private static void validateStrings(String str) {
-        if (!validCondition(str)) {
-
         }
     }
 
@@ -226,9 +221,9 @@ public class GoogleSheetsService {
             }
 
             //Fifth Validations
-            if (str.contains("CDATA")){
+            if (str.contains("CDATA")) {
                 Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
-                if (!p.matcher(str).find()){
+                if (!p.matcher(str).find()) {
                     return false;
                 }
             }
@@ -239,19 +234,21 @@ public class GoogleSheetsService {
 
 
     private static void checkIfNewDataHasAdded() throws GeneralSecurityException, IOException {
-        if (max != Long.MAX_VALUE){
+        if (max != Long.MAX_VALUE) {
             saveLogs();
         }
     }
 
-    private static boolean checkForValidData(String data){
+    private static boolean checkForValidData(String data) {
 
-        return !data.trim().isEmpty() || data.contains("<");
+        return !data.trim().isEmpty();
 
     }
+
     private static int containsVersionSheet = -1; // -1 Not Present 0 Created 1 Already Present
     private static boolean containsMasterSheet = false; // -1 Not Present 0 Created 1 Already Present
     private static boolean isVersionSheetCreated = false;
+
     public static void getSpreadSheetPropertiesData() {
 
         try {
@@ -273,7 +270,7 @@ public class GoogleSheetsService {
 
             for (Sheet sheet : sheetsList) {
 
-                if (sheet.getProperties().getTitle().equals(MyConstants.VERSION_SHEET_NAME) && containsVersionSheet == -1){
+                if (sheet.getProperties().getTitle().equals(MyConstants.VERSION_SHEET_NAME) && containsVersionSheet == -1) {
                     containsVersionSheet = 1;
                 }
 
@@ -284,13 +281,13 @@ public class GoogleSheetsService {
                 }
             }
 
-            if (!containsMasterSheet){
+            if (!containsMasterSheet) {
                 throw new Exception("Sheet not present. Please check the sheet name");
             }
 
-            if (containsVersionSheet == -1){
+            if (containsVersionSheet == -1) {
                 createVersionSheet();
-            }else if (containsVersionSheet == 1){
+            } else if (containsVersionSheet == 1) {
                 readFromVersionSheet();
             }
 
@@ -299,8 +296,8 @@ public class GoogleSheetsService {
         }
     }
 
-    public static void createVersionSheet(){
-        try{
+    public static void createVersionSheet() {
+        try {
 
             if (sheetsService == null) {
                 setup();
@@ -329,13 +326,14 @@ public class GoogleSheetsService {
             isVersionSheetCreated = true;
             readFromVersionSheet();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             isVersionSheetCreated = false;
             App.writeLogs(e.getMessage());
             App.writeLogs("Version sheet creation failed");
         }
     }
-    public static void saveLogs(){
+
+    public static void saveLogs() {
 
         try {
 
@@ -365,13 +363,13 @@ public class GoogleSheetsService {
 
             App.writeLogs("Sheet Creation Success");
             writeToVersionSheet();
-        }catch (Exception e){
+        } catch (Exception e) {
             App.writeLogs(e.getMessage());
             App.writeLogs("Sheet Creation Failed");
         }
     }
 
-    public static void readFromVersionSheet(){
+    public static void readFromVersionSheet() {
 
         try {
             if (sheetsService == null) {
@@ -409,7 +407,7 @@ public class GoogleSheetsService {
             }
             MyConstants.incrementVersion();
             readFromSpreadSheet();
-        }catch (Exception e){
+        } catch (Exception e) {
             App.writeLogs(e.getMessage());
         }
     }
@@ -440,13 +438,13 @@ public class GoogleSheetsService {
         }
     }
 
-    private static String getCurrentTimeStamp(){
+    private static String getCurrentTimeStamp() {
         return new Date().toString();
     }
 
-    private static String generateNewSheetName(){
-        if (masterSheetProperties != null){
-            return masterSheetProperties.getTitle()+" " + "V" + MyConstants.currentVersion;
+    private static String generateNewSheetName() {
+        if (masterSheetProperties != null) {
+            return masterSheetProperties.getTitle() + " " + "V" + MyConstants.currentVersion;
         }
         return "";
     }

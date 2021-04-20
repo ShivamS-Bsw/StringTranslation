@@ -16,7 +16,7 @@ public class StringValidator {
         this.colList = colList;
     }
 
-    public void checkForEachStrings() {
+    public boolean checkForEachStrings() {
 
         for (List<Object> objects : this.colList) {
 
@@ -33,6 +33,10 @@ public class StringValidator {
         }
 
         writeInvalidStringToFile();
+
+        if (invalidStrings != null && !invalidStrings.toString().trim().isEmpty()) // If Invalid Strings Found
+            return true;
+        return false;
     }
 
     private void appendToStrings(String data, String lang, int rowNumber){
@@ -55,8 +59,8 @@ public class StringValidator {
     }
 
 
-    private  boolean validCondition(String str) {
-        if ((str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>"))) {
+    public static boolean validCondition(String str) {
+        if ((str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
 
             if (str.contains("٪"))
                 return false;
@@ -77,6 +81,7 @@ public class StringValidator {
                         continue;
                     }
 
+                    // %s || %d || %f
                     if (i + 1 < len && !(str.charAt(i + 1) == 's' || str.charAt(i + 1) == 'd' || str.charAt(i + 1) == 'f')) {
 
                         if (len - i + 1 >= 3 && !(str.charAt(i + 1) >= 33 && str.charAt(i + 1) <= 41)) {
@@ -92,7 +97,10 @@ public class StringValidator {
                         } else {
                             return false;
                         }
-                    } else {
+                        //%s%%
+                    } else if (i + 3 < len && ((str.charAt(i + 1) == 's' || str.charAt(i + 1) == 'd' || str.charAt(i + 1) == 'f') && str.charAt(i + 2) == '%' && str.charAt(i + 3) == '%')){
+                        i = i + 4;
+                    }else {
                         i = i + 2;
                     }
                 }
@@ -104,12 +112,12 @@ public class StringValidator {
                 int i = str.indexOf("&");
 
                 while (i > 0 && i < len && !str.substring(i).equals("</string>")) {
-                    if (str.charAt(i) != '%') {
+                    if (str.charAt(i) != '&') {
                         i++;
                         continue;
                     }
 
-                    if (len - i + 1 >= 4 && !(str.charAt(i + 1) == 'a' && str.charAt(i + 2) == 'm' && str.charAt(i + 3) == 'p' && str.charAt(i + 3) == ';')) {
+                    if (len - i + 1 >= 4 && !(str.charAt(i + 1) == 'a' && str.charAt(i + 2) == 'm' && str.charAt(i + 3) == 'p' && str.charAt(i + 4) == ';')) {
                         return false;
                     } else {
                         i = i + 5;
@@ -139,13 +147,22 @@ public class StringValidator {
 
             //Fifth Validations
             if (str.contains("CDATA")){
-                Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
-                if (!p.matcher(str).find()){
+
+                int len = str.length();
+                int i = str.indexOf("CDATA");
+
+                if (!(len > 10  && i >= 3 && str.charAt(i-1) == '[' && str.charAt(i-2) == '!' && str.charAt(i-3) == '<')){
                     return false;
                 }
+
+//                Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
+//                if (!p.matcher(str).find()){
+//                    return false;
+//                }
             }
             return true;
         }
         return false;
     }
+   //  <![CDATA[
 }

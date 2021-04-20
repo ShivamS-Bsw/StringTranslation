@@ -42,6 +42,9 @@ public class App {
 
     public static void main(String[] args) {
         myFrame = new MyFrame();
+
+//        String str = "<string name=\"match_invitation_friend\"><![CDATA[Your friend has invited you to a play a match. Entry fee is <font color=\"#f9c61d\">%1$s</font> coins.]]></string>";
+//        System.out.println(StringValidator.validCondition(str));
     }
 
     public static void writeLogs(String str) {
