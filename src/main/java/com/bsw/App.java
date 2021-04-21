@@ -43,11 +43,6 @@ public class App {
     public static void main(String[] args) {
         myFrame = new MyFrame();
 
-//        Pattern p = Pattern.compile("<!--[\\s\\S].*?-->");
-
-        String str = "Invalid String at default  Row:1266  <string name=\"challange_sent_msg\">Challenge Sent. Waiting for %s to accept it.</string>";
-//        System.out.println((str.substring(str.indexOf("</string>")+9).trim()));
-//        System.out.println(p.matcher(str).replaceAll("").trim());
     }
 
     public static void writeLogs(String str) {

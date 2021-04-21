@@ -58,15 +58,31 @@ public class StringValidator {
 
     }
 
-    private static final Pattern p = Pattern.compile("<!--[\\s\\S].*?-->");
+    private static final Pattern p1 = Pattern.compile("<!--[\\s\\S].*?-->"); // Comments in xml tags
+    private static final Pattern p2 = Pattern.compile("&lt;br\\s*\\/?&gt;"); // Comments in xml tags
+    private static final Pattern p3 = Pattern.compile("<!\\[CDATA\\[.*?\\]\\]>"); // CDATA
 
     public static boolean validCondition(String str) {
 
-        if (p.matcher(str).find()){
-            str = p.matcher(str).replaceAll("").trim();
+        if (p1.matcher(str).find()){
+            str = p1.matcher(str).replaceAll("").trim();
         }
 
         if (!str.isEmpty() && (str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
+
+
+            if (str.contains("CDATA")){
+                if (p3.matcher(str).find()){
+                    str = p3.matcher(str).replaceAll("").trim();
+                }
+            }
+
+            if (str.contains("br")){
+                if (p2.matcher(str).find()){
+                    str = p2.matcher(str).replaceAll("").trim();
+                }
+            }
+
 
             if (str.contains("٪"))
                 return false;
@@ -151,24 +167,8 @@ public class StringValidator {
                 }
             }
 
-            //Fifth Validations
-            if (str.contains("CDATA")){
-
-                int len = str.length();
-                int i = str.indexOf("CDATA");
-
-                if (!(len > 10  && i >= 3 && str.charAt(i-1) == '[' && str.charAt(i-2) == '!' && str.charAt(i-3) == '<')){
-                    return false;
-                }
-
-//                Pattern p = Pattern.compile("(<!\\[CDATA\\[+[\\w\\d\\s<>\\/\"!#=,%$&;'?.]+\\]\\]>)");
-//                if (!p.matcher(str).find()){
-//                    return false;
-//                }
-            }
             return true;
         }
         return false;
     }
-   //  <![CDATA[
 }
