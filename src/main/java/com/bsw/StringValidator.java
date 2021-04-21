@@ -59,7 +59,7 @@ public class StringValidator {
     }
 
     private static final Pattern p1 = Pattern.compile("<!--[\\s\\S].*?-->"); // Comments in xml tags
-    private static final Pattern p2 = Pattern.compile("&lt;br\\s*\\/?&gt;"); // Comments in xml tags
+    private static final Pattern p2 = Pattern.compile("&lt;br\\s*\\/?&gt;"); // Comments in br tags
     private static final Pattern p3 = Pattern.compile("<!\\[CDATA\\[.*?\\]\\]>"); // CDATA
 
     public static boolean validCondition(String str) {
@@ -71,16 +71,20 @@ public class StringValidator {
         if (!str.isEmpty() && (str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
 
 
+            // Converting the valid CDATA with "" because inside CDATA can have & not &amp;
             if (str.contains("CDATA")){
                 if (p3.matcher(str).find()){
                     str = p3.matcher(str).replaceAll("").trim();
-                }
+                }else
+                    return false;
             }
 
-            if (str.contains("br")){
+            // Converting the valid br tags with "" &lt;br\\
+            if (str.contains("br /") || str.contains("br/")){
                 if (p2.matcher(str).find()){
                     str = p2.matcher(str).replaceAll("").trim();
-                }
+                }else
+                    return false;
             }
 
 
