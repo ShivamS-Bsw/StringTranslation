@@ -34,9 +34,12 @@ public class StringValidator {
 
         writeInvalidStringToFile();
 
-        if (invalidStrings != null && !invalidStrings.toString().trim().isEmpty()) // If Invalid Strings Found
-            return true;
-        return false;
+        if(invalidStrings != null){
+            if (invalidStrings.toString().trim().isEmpty()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void appendToStrings(String data, String lang, int rowNumber){
@@ -51,7 +54,9 @@ public class StringValidator {
             writer.write(this.invalidStrings.toString());
             writer.flush();
             writer.close();
-            App.writeLogs("Invalid Strings Found: Write Success -" + fileName);
+            if (!this.invalidStrings.toString().isEmpty()) {
+                App.writeLogs("Invalid Strings Found: Write Success -" + fileName);
+            }
         } catch (IOException e) {
             App.writeLogs("Failed to write invalid strings:" + e.getMessage());
         }
@@ -66,9 +71,12 @@ public class StringValidator {
 
         if (p1.matcher(str).find()){
             str = p1.matcher(str).replaceAll("").trim();
+
+            if(str.isEmpty())
+                return true;
         }
 
-        if (!str.isEmpty() && (str.startsWith("<string name") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
+        if (!str.isEmpty() && (str.startsWith("<string ") && str.endsWith("</string>")) || (str.startsWith("<item>") && str.endsWith("</item>")) || str.endsWith("</string-array>") || str.startsWith("<string-array name=")) {
 
 
             // Converting the valid CDATA with "" because inside CDATA can have & not &amp;
@@ -133,7 +141,7 @@ public class StringValidator {
             }
 
             //Third Validation
-            if (str.contains("&")) {
+            if (str.contains("&") && !str.contains("&quot;") && !str.contains("&#8230;")) {
                 int len = str.length();
                 int i = str.indexOf("&");
 
@@ -163,7 +171,7 @@ public class StringValidator {
                         i++;
                         continue;
                     }
-                    if (i + 1 < len && !(str.charAt(i + 1) == 'n' || str.charAt(i + 1) == '\'' || str.charAt(i + 1) == '"')) {
+                    if (i + 1 < len && !(str.charAt(i + 1) == 'n' || str.charAt(i + 1) == 't' || str.charAt(i + 1) == '?' || str.charAt(i + 1) == 'u' || str.charAt(i + 1) == '\'' || str.charAt(i + 1) == '"')) {
                         return false;
                     } else {
                         i = i + 2;

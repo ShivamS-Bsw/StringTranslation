@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StringsPaste.iml" filepath="$PROJECT_DIR$/.idea/modules/StringsPaste.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/StringsPaste.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/StringsPaste.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StringTranslation.iml" filepath="$PROJECT_DIR$/.idea/modules/StringTranslation.iml" />
     </modules>
   </component>
 </project>

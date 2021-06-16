@@ -6,20 +6,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,67 +34,79 @@ import javax.xml.transform.stream.StreamResult;
 
 public class XMLService implements AutoCloseable{
 
-    private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    private DocumentBuilder documentBuilder;
-    private Document file = null;
     private String language;
+    private StringBuilder resultStringBuilder;
+    private String filePath;
 
-    XMLService(String language){
-        try {
-            this.language = language;
-            documentBuilder = factory.newDocumentBuilder();
-            readFile();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
+
+    XMLService(String language) throws FileNotFoundException {
+        resultStringBuilder = new StringBuilder();
+        this.language = language;
+        this.filePath = MyConstants.getFilePath(this.language);
+
+        if (this.language.equals("") || this.language.equals("default")){
+            this.filePath = MyConstants.getFilePath(this.language);
+        }
+
+        addStartingString();
+
+        if (this.language.equals("en")){
+//            readFile();
         }
     }
 
-    private void readFile() {
-        try {
-            file = documentBuilder.parse(new File(MyConstants.getFilePath(language)));
-        } catch (SAXException | IOException e) {
-            e.printStackTrace();
-        }
+    private void readFile() throws FileNotFoundException{
+        System.out.println("Opening File : " + language);
+            FileInputStream fis= null;
+            fis = new FileInputStream(new File(filePath));
+            Scanner sc=new Scanner(fis);
+            while(sc.hasNextLine()) {
+                if (!sc.nextLine().trim().isEmpty()){
+//                    str1.add(sc.nextLine());
+                }
+            }
+            sc.close();
+    }
+
+    private void addStartingString(){
+        resultStringBuilder.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>").append("\n");
+        resultStringBuilder.append("<resources>").append("\n");
+    }
+
+    private void addEndingString(){
+        resultStringBuilder.append("</resources>").append("\n");
     }
 
     public void appendFile(String str) {
-        try {
 
-            for (String key : MyConstants.errorMaps.keySet()){
-                str = str.replace(key,MyConstants.errorMaps.get(key));
-            }
+//        str2.add(str);
 
-            Document element = null;
-            element = documentBuilder.parse(new ByteArrayInputStream(str.getBytes(Charset.forName("UTF-8"))));
-            Node importedNode = file.importNode(element.getFirstChild(), true);
-            Element root = file.getDocumentElement();
-            if (importedNode != null) {
-                root.appendChild(importedNode);
+        for (String key : MyConstants.errorMaps.keySet()) {
+            if (str.contains(key)){
+                str = str.replace(key, MyConstants.errorMaps.get(key));
             }
-            System.out.println("Write Success: " + language + " :" + str);
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        if (resultStringBuilder == null) {
+            resultStringBuilder = new StringBuilder();
+            addStartingString();
+        }
+
+        resultStringBuilder.append(str).append("\n");
+
     }
 
     private void closeFile() {
-
-        Transformer tr = null;
         try {
-            tr = TransformerFactory.newInstance().newTransformer();
-            tr.setOutputProperty(OutputKeys.INDENT, "yes");
-            tr.transform(new DOMSource(file), new StreamResult(new OutputStreamWriter(new FileOutputStream(new File(MyConstants.getFilePath(this.language))), StandardCharsets.UTF_8)));
-
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
+            addEndingString();
+            FileWriter writer = new FileWriter(new File(filePath));
+            writer.write(resultStringBuilder.toString());
+            writer.flush();
+            writer.close();
+            App.writeLogs("Write Success : " + language);
+        } catch (IOException e) {
+            App.writeLogs("###FileNotFound: " + filePath);
         }
-        System.out.println("Closing File : " + language);
     }
 
     @Override

@@ -43,6 +43,8 @@ public class App {
     public static void main(String[] args) {
         myFrame = new MyFrame();
 
+//        String str = "<string name=</string>";
+//        System.out.println(StringValidator.validCondition(str));
     }
 
     public static void writeLogs(String str) {

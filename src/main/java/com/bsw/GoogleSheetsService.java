@@ -1,6 +1,5 @@
 package com.bsw;
 
-import com.bsw.ui.MyFrame;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.AddSheetRequest;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 public class GoogleSheetsService {
@@ -34,6 +32,7 @@ public class GoogleSheetsService {
         try {
             sheetsService = SheetsServiceUtil.getSheetsService();
             getSpreadSheetPropertiesData();
+//            readFromSpreadSheet();
         } catch (Exception e) {
             App.writeLogs(e.getMessage());
         }
@@ -71,7 +70,7 @@ public class GoogleSheetsService {
 
                         String lang = objects.get(0).toString(); // Lang Coloumn
                         max = max - objects.size();
-                        try (XMLService_1 xmlService_1 = new XMLService_1(lang)) {
+                        try (XMLService xmlService_1 = new XMLService(lang)) {
                             for (int i = 1; i < objects.size(); i++) {
                                 String data = objects.get(i).toString();
 
